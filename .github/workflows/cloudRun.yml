@@ -16,9 +16,13 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
         with:
-          version: '485.0.1'  # Safe for Python 3.12 runners
-          service_account_key: ${{ secrets.GCLOUD_AUTH }}
+          version: '485.0.1'
           project_id: cdtest-406103
+
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: '${{ secrets.GCLOUD_AUTH }}'
 
       - name: Build Docker image
         run: |
