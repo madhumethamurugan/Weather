@@ -3,7 +3,7 @@ name: Deploy Static Site to Cloud Run
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
