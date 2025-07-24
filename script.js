@@ -1,64 +1,45 @@
-const todoInput = document.getElementById("todo-input");
-const todoList = document.getElementById("todo-list");
-const addBtn = document.getElementById("add-btn");
+const createBtn = document.querySelector(".create-btn");
+const notesContainer = document.querySelector(".notes-container");
 
 window.addEventListener("load", () => {
-    const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
-    savedTodos.forEach(todoTask => {
-        addToTodoList(todoTask.text, todoTask.completed);
+    const savedNotes = JSON.parse(localStorage.getItem("dairy")) || [];
+    savedNotes.forEach(note => {
+        if(note.text != ""){
+            addNotes(note.text);
+        }
     })
 })
 
-addBtn.addEventListener("click", () => {
-    if(todoInput.value == ''){
-        alert("Input any task");
-    }
-    else{
-        addToTodoList(todoInput.value, false);
-        todoInput.value = '';
-        saveTodos();
-    }
-})
+function addNotes(text){
+    const note = document.createElement("div");
+    note.className = "note";
+    notesContainer.appendChild(note);
 
-function addToTodoList(task, isCompleted){
-    //add the task entered in todoInput
-    const listItem = document.createElement("li");
+    note.style.display = "block";
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.className = "my-notes";
+    note.appendChild(textArea);
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.className = "task-checkbox";
-    checkbox.checked = isCompleted;
-
-    checkbox.addEventListener("change", () => {
-        saveTodos();
+    const deleteBtn = document.createElement("i");
+    deleteBtn.className = "fas fa-trash delete-icon";
+    note.appendChild(deleteBtn);
+    deleteBtn.addEventListener("click", () => {
+        textArea.remove();
+        note.style.display = "none";
+        deleteBtn.remove();
+        saveNotes();
     })
-
-    const removeBtn = document.createElement("button");
-    removeBtn.className = "remove-btn";
-    removeBtn.innerHTML = "×";
-
-    removeBtn.addEventListener("click", () => {
-        todoList.removeChild(listItem);
-        saveTodos();
-    })
-
-    const taskText = document.createElement("span");
-    taskText.innerHTML = task;
-    taskText.className = "task-text";
-
-    listItem.appendChild(checkbox);
-    listItem.appendChild(taskText);
-    listItem.appendChild(removeBtn);
-
-    todoList.appendChild(listItem);
+    saveNotes();
 }
 
-function saveTodos(){
-    const tasks = [];
-    document.querySelectorAll("#todo-list li").forEach(item => {
-        const text = item.querySelector(".task-text").textContent;
-        const completed = item.querySelector(".task-checkbox").checked;
-        tasks.push({ text, completed });
+createBtn.addEventListener("click", () => addNotes(""));
+
+function saveNotes(){
+    const notes = [];
+    document.querySelectorAll(".note").forEach(note => {
+        const text = note.querySelector(".my-notes").value;
+        notes.push({text});
     })
-    localStorage.setItem("todos",JSON.stringify(tasks));
+    localStorage.setItem("dairy", JSON.stringify(notes));
 }
