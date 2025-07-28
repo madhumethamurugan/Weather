@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="weather-card">
+    <div class="search">
+      <input type="text" placeholder="enter city name" id="city-input" />
+      <button id="search-btn"><img src="https://img.icons8.com/ios-filled/20/search.png" alt="search" /></button>
+    </div>
+
+    <div class="weather-info">
+      <img src="https://cdn-icons-png.flaticon.com/512/1163/1163624.png" class="weather-icon" />
+      <h1 class="temp">22°C</h1>
+      <h2 class="city">New York</h2>
+
+      <div class="details">
+        <div class="col">
+          <img src="https://cdn-icons-png.flaticon.com/512/728/728093.png" alt="humidity" />
+          <div>
+            <p class="humidity">50%</p>
+            <p>Humidity</p>
+          </div>
+        </div>
+        <div class="col">
+          <img src="https://cdn-icons-png.flaticon.com/512/553/553416.png" alt="wind" />
+          <div>
+            <p class="wind">15 km/h</p>
+            <p>Wind Speed</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    const searchBtn = document.getElementById("search-btn");
+    searchBtn.addEventListener("click", () => getData())
+    const cityInput = document.querySelector("#city-input");
+    const city = document.querySelector(".city");
+    const temp = document.querySelector(".temp");
+    const humidity = document.querySelector(".humidity");
+    const wind = document.querySelector(".wind");
+
+    async function getData(){
+      if(cityInput.value == ''){
+        alert("Please enter a city name");
+        return;
+      }
+      city.innerHTML = cityInput.value.toUpperCase();
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city.innerHTML}&appid=e52a6ee99e3e03cbdc8db0cb38beaae7&units=metric`
+      const response = await fetch(url);
+      const data = await response.json();
+      temp.innerHTML = Math.round(data.main.temp) + "°C";
+      humidity.innerHTML = data.main.humidity + "%";
+      wind.innerHTML = data.wind.speed + "km/h";
+
+      cityInput.value = '';
+    }
+
+  </script>
+</body>
+</html>
